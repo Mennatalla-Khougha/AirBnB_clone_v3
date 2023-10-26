@@ -7,7 +7,7 @@ import json
 @app_views.route('/status')
 def status():
     """displays a API page"""
-    formatted_json = json.dumps({"status": "OK"}, indent=2)
+    formatted_json = json.dumps({"status": "OK"}, indent=2) + '\n'
     result = Response(formatted_json, content_type='application/json')
     return result
 
@@ -22,6 +22,6 @@ def stats():
         "states": storage.count('State'),
         "users": storage.count('User')
     }
-    formatted_json = json.dumps(response, indent=2)
+    formatted_json = json.dumps(response, indent=2) + '\n'
     result = Response(formatted_json, content_type='application/json')
     return result

@@ -18,7 +18,7 @@ def close(exception):
 def err(error):
     """returns a JSON-formatted 404 status code response"""
     response = {"error": "Not found"}
-    formatted_json = json.dumps(response, indent=2)
+    formatted_json = json.dumps(response, indent=2) +'\n'
     result = Response(formatted_json, content_type='application/json')
     return result
     
