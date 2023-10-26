@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 from api.v1.views import app_views
-from flask import Flask, jsonify, Response
+from flask import Flask, Response
 from models import storage
 import json
 
 @app_views.route('/status')
 def status():
     """displays a API page"""
-    response = {"status": "OK"}
-    return jsonify(response)
+    formatted_json = json.dumps({"status": "OK"}, indent=2)
+    result = Response(formatted_json, content_type='application/json')
+    return result
 
 @app_views.route('/stats')
 def stats():
