@@ -49,7 +49,6 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-            return (new_dict)
         return (new_dict)
 
     def new(self, obj):
@@ -80,12 +79,11 @@ class DBStorage:
         """A method to retrieve one object"""
         if cls is None or id is None:
             return None
-        for key, value in classes.items():
-            if cls == key or cls == value:
-                return self.__session.query(value).filter(value.id == id).first()
+        for key, val in classes.items():
+            if cls == key or cls == val:
+                return self.__session.query(val).filter(val.id == id).first()
         return None
 
     def count(self, cls=None):
         """Returns the number of objects in storage matching the given class"""
         return len(self.all(cls))
-        

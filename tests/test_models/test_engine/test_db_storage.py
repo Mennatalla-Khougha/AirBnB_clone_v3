@@ -68,21 +68,42 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
         self.assertIs(type(models.storage.all()), dict)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_no_class(self):
         """Test that all returns all rows when no class is passed"""
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
         """test that new adds an object to the database"""
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    def test_get(self):
+        """Test that get properly retrive the specific object"""
+        state = State(name='Albama')
+        state.save()
+        amenity = Amenity(name='wifi')
+        amenity.save()
+        result = models.storage.get(State, state.id)
+        result_2 = models.storage.get(Amenity, amenity.id)
+        self.assertIs(state, result)
+        self.assertIs(None, models.storage.get("State", "none"))
+        self.assertIs(None, models.storage.get("none", "none"))
+        self.assertIs(amenity, result_2)
+
+    def test_count(self):
+        """test that count properly count the object in the class"""
+        base = len(models.storage.all())
+        base_2 = len(models.storage.all(State))
+        state = State(name="Texas")
+        state.save()
+        amenity = Amenity(name='kitchen')
+        amenity.save()
+        self.assertEqual(base + 2, models.storage.count())
+        self.assertEqual(base_2 + 1, models.storage.count("State"))
