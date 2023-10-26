@@ -19,8 +19,6 @@ import os
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class TestFileStorageDocs(unittest.TestCase):
@@ -68,48 +66,77 @@ test_file_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
+@unittest.skipIf(models.storage_t == 'db', "not testing file storage")
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @classmethod
+    def setUp(self):
+        try:
+            os.rename("file.json", "filetest.json")
+        except IOError:
+            pass
+        """Set up for the doc tests"""
+        self.classes = [
+            BaseModel, User,
+            State, City,
+            Amenity, Place,
+            Review
+        ]
+
+    @classmethod
+    def tearDown(self):
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("filetest.json", "file.json")
+        except IOError:
+            pass
+        FileStorage._FileStorage__objects = {}
+
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
-        storage = FileStorage()
-        new_dict = storage.all()
+        new_dict = models.storage.all()
         self.assertEqual(type(new_dict), dict)
-        self.assertIs(new_dict, storage._FileStorage__objects)
+        self.assertIs(new_dict, models.storage._FileStorage__objects)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_new(self):
         """test that new adds an object to the FileStorage.__objects attr"""
-        storage = FileStorage()
-        save = FileStorage._FileStorage__objects
         FileStorage._FileStorage__objects = {}
         test_dict = {}
-        for key, value in classes.items():
-            with self.subTest(key=key, value=value):
+        for value in self.classes:
+            with self.subTest(value=value):
                 instance = value()
                 instance_key = instance.__class__.__name__ + "." + instance.id
-                storage.new(instance)
+                models.storage.new(instance)
                 test_dict[instance_key] = instance
-                self.assertEqual(test_dict, storage._FileStorage__objects)
-        FileStorage._FileStorage__objects = save
+                self.assertEqual(test_dict, models.storage.all())
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
         new_dict = {}
-        for key, value in classes.items():
+        FileStorage._FileStorage__objects = {}
+        for value in self.classes:
             instance = value()
+            models.storage.new(instance)
             instance_key = instance.__class__.__name__ + "." + instance.id
-            new_dict[instance_key] = instance
-        save = FileStorage._FileStorage__objects
-        FileStorage._FileStorage__objects = new_dict
-        storage.save()
-        FileStorage._FileStorage__objects = save
-        for key, value in new_dict.items():
-            new_dict[key] = value.to_dict()
+            new_dict[instance_key] = instance.to_dict()
+        models.storage.save()
         string = json.dumps(new_dict)
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    def test_get(self):
+        """Test get object"""
+        for value in self.classes:
+            obj = list(models.storage.all(value).values())[0].id
+            self.assertEqual(models.storage.get(value, obj).id, obj)
+
+    def test_get(self):
+        """Test count class"""
+        for value in self.classes:
+            base = len(models.storage.all(value))
+            self.assertEqual(base, models.storage.count(value))
