@@ -20,6 +20,7 @@ import pep8
 import unittest
 FileStorage = file_storage.FileStorage
 
+
 class TestFileStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of FileStorage class"""
     @classmethod
