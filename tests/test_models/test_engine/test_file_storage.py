@@ -131,9 +131,19 @@ class TestFileStorage(unittest.TestCase):
 
     def test_get(self):
         """Test get object"""
-        for value in self.classes:
-            obj = list(models.storage.all(value).values())[0].id
-            self.assertEqual(models.storage.get(value, obj).id, obj)
+        # for value in self.classes:
+        #     obj = list(models.storage.all(value).values())[0].id
+        #     self.assertEqual(models.storage.get(value, obj).id, obj)
+        state = State(name='Albama')
+        state.save()
+        amenity = Amenity(name='wifi')
+        amenity.save()
+        result = models.storage.get(State, state.id)
+        result_2 = models.storage.get(Amenity, amenity.id)
+        self.assertIs(state, result)
+        self.assertIs(None, models.storage.get("State", "none"))
+        self.assertIs(None, models.storage.get("none", "none"))
+        self.assertIs(amenity, result_2)
 
     def test_count(self):
         """Test count class"""
