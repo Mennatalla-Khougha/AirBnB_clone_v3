@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """states routes"""
 from api.v1.views import app_views
-from flask import Flask, abort, Response, jsonify, request
+from flask import Flask, abort, jsonify, request
 from models import storage
 from models.state import State
 import json
@@ -13,19 +13,14 @@ def states():
     states = []
     for state in storage.all(State).values():
         states.append(state.to_dict())
-    formatted_json = json.dumps(states, indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result
-
+    return jsonify(states)
 
 @app_views.route('/states/<state_id>', strict_slashes=False)
 def states_with_id(state_id):
     """Retrieves the list of all State objects"""
     state = storage.get(State, state_id)
     if state:
-        formatted_json = json.dumps(state.to_dict(), indent=2) + '\n'
-        result = Response(formatted_json, content_type='application/json')
-        return result
+        return jsonify(state.to_dict())
     abort(404)
 
 
@@ -48,20 +43,15 @@ def delete_route(state_id):
 def post_route():
     """Returns the new State with the status code 201"""
     if not request.is_json:
-        formatted_json = json.dumps({"error": "Not a JSON"}, indent=2) + '\n'
-        result = Response(formatted_json, content_type='application/json')
-        return result, 400
+        return jsonify({"error": "Not a JSON"}), 400
 
     data = request.get_json()
     if 'name' not in data:
-        formatted_json = json.dumps({"error": "Missing name"}, indent=2) + '\n'
-        result = Response(formatted_json, content_type='application/json')
-        return result, 400
+        return jsonify({"error": "Missing name"}), 400
 
-    state = State(data)
-    formatted_json = json.dumps(state.to_dict(), indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result, 201
+    state = State(**data)
+    state.save()
+    return jsonify(state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
@@ -72,15 +62,11 @@ def put_route(state_id):
         abort(404)
 
     if not request.is_json:
-        formatted_json = json.dumps({"error": "Not a JSON"}, indent=2) + '\n'
-        result = Response(formatted_json, content_type='application/json')
-        return result, 400
+        return jsonify({"error": "Not a JSON"}), 400
 
     states = request.get_json()
     for key, value in states.items():
-        if key not in ('id', 'created_st', 'updated_at'):
+        if key not in ('id', 'created_at', 'updated_at'):
             setattr(data, key, value)
     data.save()
-    formatted_json = json.dumps(data.to_dict(), indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result, 200
+    return jsonify(data.to_dict()), 200

@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """starts a Flask web application"""
 from os import getenv
-from flask import Flask, Response
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
-import json
 app = Flask(__name__)
 app.register_blueprint(app_views)
 
@@ -18,10 +17,7 @@ def close(exception):
 @app.errorhandler(404)
 def err(error):
     """returns a JSON-formatted 404 status code response"""
-    response = {"error": "Not found"}
-    formatted_json = json.dumps(response, indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result
+    return jsonify({"error": "Not found"})
 
 
 if __name__ == "__main__":

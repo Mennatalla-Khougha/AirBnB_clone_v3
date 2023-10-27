@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """status and stats routes"""
 from api.v1.views import app_views
-from flask import Flask, Response
+from flask import Flask, jsonify
 from models import storage
 import json
 
@@ -9,9 +9,7 @@ import json
 @app_views.route('/status')
 def status():
     """displays a API page"""
-    formatted_json = json.dumps({"status": "OK"}, indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result
+    return jsonify({"status": "OK"})
 
 
 @app_views.route('/stats')
@@ -25,6 +23,4 @@ def stats():
         "states": storage.count('State'),
         "users": storage.count('User')
     }
-    formatted_json = json.dumps(response, indent=2) + '\n'
-    result = Response(formatted_json, content_type='application/json')
-    return result
+    return jsonify(response)
