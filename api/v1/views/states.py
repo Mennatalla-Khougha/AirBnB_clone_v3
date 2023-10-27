@@ -15,6 +15,7 @@ def states():
         states.append(state.to_dict())
     return jsonify(states)
 
+
 @app_views.route('/states/<state_id>', strict_slashes=False)
 def states_with_id(state_id):
     """Retrieves the list of all State objects"""
