@@ -3,16 +3,15 @@
 from api.v1.views import app_views
 from flask import Flask, jsonify
 from models import storage
-import json
 
 
-@app_views.route('/status')
+@app_views.route('/status', strict_slashes=False)
 def status():
     """displays a API page"""
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats')
+@app_views.route('/stats', strict_slashes=False)
 def stats():
     """ retrieves the number of each objects by type"""
     response = {

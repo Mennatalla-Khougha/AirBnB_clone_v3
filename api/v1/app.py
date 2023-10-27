@@ -17,7 +17,7 @@ def close(exception):
 @app.errorhandler(404)
 def err(error):
     """returns a JSON-formatted 404 status code response"""
-    return jsonify({"error": "Not found"})
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
