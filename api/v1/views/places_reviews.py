@@ -12,11 +12,11 @@ from models.user import User
     '/places/<place_id>/reviews',
     strict_slashes=False
     )
-def city_from_state_id(place_id):
+def reviews_from_place_id(place_id):
     """Retrieves the list of all review objects of a place"""
     place = storage.get(Place, place_id)
     if place:
-        reviews = [review.to_dict() for review in place.review]
+        reviews = [review.to_dict() for review in place.reviews]
         return jsonify(reviews)
     abort(404)
 
@@ -24,7 +24,7 @@ def city_from_state_id(place_id):
 @app_views.route(
     '/reviews/<review_id>',
     strict_slashes=False)
-def city_with_id(review_id):
+def review_with_id(review_id):
     """Retrieves a review object"""
     review = storage.get(Review, review_id)
     if review:
@@ -37,7 +37,7 @@ def city_with_id(review_id):
         methods=['DELETE'],
         strict_slashes=False
     )
-def delete_city(review_id):
+def delete_review(review_id):
     """Returns an empty dictionary with the status code 200"""
     review = storage.get(Review, review_id)
     if review is None:
@@ -52,7 +52,7 @@ def delete_city(review_id):
         methods=['POST'],
         strict_slashes=False
     )
-def post_city(place_id):
+def post_review(place_id):
     """Creates a review"""
     if not request.is_json:
         return jsonify({"error": "Not a JSON"}), 400
@@ -75,7 +75,7 @@ def post_city(place_id):
     review = Review(**data)
     review.place_id = place_id
     review.save()
-    return jsonify(Place.to_dict()), 201
+    return jsonify(review.to_dict()), 201
 
 
 @app_views.route(
@@ -83,7 +83,7 @@ def post_city(place_id):
         methods=['PUT'],
         strict_slashes=False
     )
-def put_city(review_id):
+def put_review(review_id):
     """Returns the review object with the status code 200"""
     review = storage.get(Review, review_id)
     if review is None:
