@@ -135,7 +135,7 @@ class TestFileStorage(unittest.TestCase):
             obj = list(models.storage.all(value).values())[0].id
             self.assertEqual(models.storage.get(value, obj).id, obj)
 
-    def test_get(self):
+    def test_count(self):
         """Test count class"""
         for value in self.classes:
             base = len(models.storage.all(value))
