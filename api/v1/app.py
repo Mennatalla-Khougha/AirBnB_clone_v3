@@ -14,14 +14,15 @@ def close(exception):
     """call the close method"""
     storage.close()
 
+
 @app.errorhandler(404)
 def err(error):
     """returns a JSON-formatted 404 status code response"""
     response = {"error": "Not found"}
-    formatted_json = json.dumps(response, indent=2) +'\n'
+    formatted_json = json.dumps(response, indent=2) + '\n'
     result = Response(formatted_json, content_type='application/json')
     return result
-    
+
 
 if __name__ == "__main__":
     host = getenv('HBNB_API_HOST', '0.0.0.0')

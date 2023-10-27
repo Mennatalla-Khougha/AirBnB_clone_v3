@@ -6,7 +6,7 @@ from models.state import State
 import json
 
 
-@app_views.route('/states', strict_slashes = False)
+@app_views.route('/states', strict_slashes=False)
 def states():
     """Retrieves the list of all State objects"""
     states = []
@@ -16,7 +16,8 @@ def states():
     result = Response(formatted_json, content_type='application/json')
     return result
 
-@app_views.route('/states/<state_id>', strict_slashes = False)
+
+@app_views.route('/states/<state_id>', strict_slashes=False)
 def states_with_id(state_id):
     """Retrieves the list of all State objects"""
     state = storage.get(State, state_id)
@@ -26,10 +27,11 @@ def states_with_id(state_id):
         return result
     abort(404)
 
+
 @app_views.route(
         '/states/<state_id>',
         methods=['DELETE'],
-        strict_slashes = False
+        strict_slashes=False
     )
 def delete_route(state_id):
     """Returns an empty dictionary with the status code 200"""
@@ -40,7 +42,8 @@ def delete_route(state_id):
     storage.save()
     return (jsonify({}))
 
-@app_views.route('/states', methods=['POST'], strict_slashes = False)
+
+@app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_route():
     """Returns the new State with the status code 201"""
     if not request.is_json:
@@ -60,7 +63,7 @@ def post_route():
     return result, 201
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes = False)
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_route(state_id):
     """Returns the State object with the status code 200"""
     data = storage.get(State, state_id)

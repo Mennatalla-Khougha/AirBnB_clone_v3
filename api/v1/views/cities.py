@@ -7,7 +7,7 @@ from models.city import City
 import json
 
 
-@app_views.route('/states/<state_id>/cities', strict_slashes = False)
+@app_views.route('/states/<state_id>/cities', strict_slashes=False)
 def city_from_state_id(state_id):
     """Retrieves the list of all City objects of a State"""
     state = storage.get(State, state_id)
@@ -18,7 +18,8 @@ def city_from_state_id(state_id):
         return result
     abort(404)
 
-@app_views.route('/cities/<city_id>', strict_slashes = False)
+
+@app_views.route('/cities/<city_id>', strict_slashes=False)
 def city_with_id(city_id):
     """Retrieves a City object"""
     city = storage.get(City, city_id)
@@ -28,10 +29,11 @@ def city_with_id(city_id):
         return result
     abort(404)
 
+
 @app_views.route(
         'cities/<city_id>',
         methods=['DELETE'],
-        strict_slashes = False
+        strict_slashes=False
     )
 def delete_city(city_id):
     """Returns an empty dictionary with the status code 200"""
@@ -42,10 +44,11 @@ def delete_city(city_id):
     storage.save()
     return (jsonify({}))
 
+
 @app_views.route(
     '/states/<state_id>/cities',
     methods=['POST'],
-    strict_slashes = False
+    strict_slashes=False
     )
 def post_city(state_id):
     """Creates a City"""
@@ -75,7 +78,7 @@ def post_city(state_id):
 @app_views.route(
     'cities/<city_id>',
     methods=['PUT'],
-    strict_slashes = False
+    strict_slashes=False
     )
 def put_city(city_id):
     """Returns the city object with the status code 200"""

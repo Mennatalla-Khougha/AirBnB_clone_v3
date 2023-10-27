@@ -4,12 +4,14 @@ from flask import Flask, Response
 from models import storage
 import json
 
+
 @app_views.route('/status')
 def status():
     """displays a API page"""
     formatted_json = json.dumps({"status": "OK"}, indent=2) + '\n'
     result = Response(formatted_json, content_type='application/json')
     return result
+
 
 @app_views.route('/stats')
 def stats():
