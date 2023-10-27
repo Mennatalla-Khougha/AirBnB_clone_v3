@@ -61,7 +61,7 @@ def post_city(state_id):
 
     city = City(**data)
     city.state_id = state_id
-    storage.save()
+    city.save()
     return jsonify(city.to_dict()), 201
 
 
@@ -81,7 +81,7 @@ def put_city(city_id):
 
     cities = request.get_json()
     for key, value in cities.items():
-        if key not in ('id', 'state_id', 'created_st', 'updated_at'):
+        if key not in ('id', 'state_id', 'created_at', 'updated_at'):
             setattr(data, key, value)
     data.save()
     return jsonify(data.to_dict()), 200
