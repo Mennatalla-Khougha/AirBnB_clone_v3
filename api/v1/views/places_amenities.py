@@ -56,14 +56,14 @@ def post_amenity2(place_id, amenity_id):
     if place is None or amenity is None:
         abort(404)
 
-    if amenity not in place.amenities:
+    if amenity in place.amenities:
         return jsonify(amenity.to_dict())
 
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         place.amenities.append(amenity)
     else:
-        if "amenity_ids" not in place.__dict__:
-            place.__dict__["amenity_ids"] = []
-        place.__dict__["amenity_ids"].append(amenity.id)
+        # place.amenities_ids.append(amenity)
+        if amenity_id not in place.__dict__['amenity_ids']:
+            place.__dict__["amenity_ids"].append(amenity.id)
     place.save()
     return jsonify(amenity.to_dict()), 201
