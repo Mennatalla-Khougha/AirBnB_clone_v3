@@ -2,6 +2,7 @@
 """ holds class Place"""
 import models
 from models.base_model import BaseModel, Base
+from models.amenity import Amenity
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
@@ -77,6 +78,13 @@ class Place(BaseModel, Base):
             amenity_list = []
             all_amenities = models.storage.all(Amenity)
             for amenity in all_amenities.values():
-                if amenity.place_id == self.id:
+                if amenity.id in self.amenity_ids:
                     amenity_list.append(amenity)
             return amenity_list
+
+        @amenities.setter
+        def amenities(self, value):
+            if type(value) == Amenity:
+                if "amenity_ids" not in self.__dict__:
+                    self.__dict__["amenity_ids"] = []
+                self.__dict__["amenity_ids"].append(value.id)
