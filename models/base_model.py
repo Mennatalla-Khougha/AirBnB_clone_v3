@@ -68,9 +68,9 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
-        if '_password' in new_dict:
-            new_dict['password'] = new_dict['_password']
-            new_dict.pop('_password')
+        if '_User__password' in new_dict:
+            new_dict['password'] = new_dict['_User__password']
+            new_dict.pop('_User__password')
         if not file_store:
             new_dict.pop('password', None)
         return new_dict
