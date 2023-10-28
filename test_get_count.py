@@ -23,6 +23,8 @@ user.save()
 print(user.__dict__)
 print(user.to_dict()) """
 
-users = storage.all(User).values()
-for user in users:
-    print(user.__dict__)
+user = list(storage.all(User).values())[0]
+print(user.password)
+print(user.__dict__)
+print(user.to_dict())
+print(user.to_dict(True))
