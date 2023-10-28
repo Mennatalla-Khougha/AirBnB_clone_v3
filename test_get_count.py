@@ -18,10 +18,8 @@ city.save()
 
 # creation of a User
 user = User(email="john@snow.com", password="johnpwd")
-user.save()
+user.save() """
 
-print(user.__dict__)
-print(user.to_dict()) """
 
 user = list(storage.all(User).values())[0]
 print(user.password)
