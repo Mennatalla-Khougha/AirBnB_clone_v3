@@ -113,7 +113,7 @@ def post_place_2():
     if not data or not (data.get('state') or data.get('cities')):
         places = storage.all(Place).values()
 
-    else: 
+    else:
         places = {}
         states = data.get('states')
         if states:
@@ -141,6 +141,5 @@ def post_place_2():
                 result.append(place)
     else:
         result = places
-    places = [place.to_dict() for place in result]
 
-    return jsonify([place.to_dict() for place in places])
+    return jsonify([place.to_dict() for place in result])
