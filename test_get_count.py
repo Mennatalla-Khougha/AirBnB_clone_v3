@@ -8,21 +8,9 @@ from models.place import Place
 from models.amenity import Amenity
 from models import storage
 
-""" # creation of a State
-state = State(name="California")
-state.save()
-
-# creation of a City
-city = City(state_id=state.id, name="San Francisco")
-city.save()
-
-# creation of a User
-user = User(email="john@snow.com", password="johnpwd")
-user.save() """
-
-
-user = list(storage.all(User).values())[0]
-print(user.password)
-print(user.__dict__)
-print(user.to_dict())
-print(user.to_dict(True))
+place = list(storage.all(Place).values())[0]
+amenities =  ["f4dfd576-7c29-4bdf-9fbd-5c95a170ebce"]
+print(place.to_dict())
+if amenities:
+    amenity_ids = [amenity.id for amenity in place.amenities]
+    print(place.__dict__)
