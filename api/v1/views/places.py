@@ -110,7 +110,11 @@ def post_place_2():
 
     data = request.get_json()
 
-    if not data or not (data.get('state') or data.get('cities')):
+    if not data or not (
+        data.get('states')
+        or data.get('cities')
+        or data.get('amenities')
+    ):
         places = storage.all(Place).values()
 
     else:
@@ -119,8 +123,10 @@ def post_place_2():
         if states_ids:
             for state_id in states_ids:
                 state = storage.get(State, state_id)
-                for city in state.cities:
-                    places[city.name] = city.places
+                if state:
+                    for city in state.cities:
+                        places[city.name] = city.places
+                
 
         cities_id = data.get('cities')
         if cities_id:
@@ -134,16 +140,15 @@ def post_place_2():
                 tmp.append(place)
         places = tmp
 
-    result = places
     amenities = data.get('amenities')
     if amenities:
         for place in places:
             amenity_ids = [amenity.id for amenity in place.amenities]
             for amenity in amenities:
                 if amenity not in amenity_ids:
-                    result.remove(place)
+                    places.remove(place)
                     break
-    result = [place.to_dict() for place in result]
+    result = [place.to_dict() for place in places]
     for place in result:
         if 'amenities' in place:
             place.pop('amenities')
