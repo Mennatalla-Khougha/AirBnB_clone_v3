@@ -7,7 +7,6 @@ from models.city import City
 from models.place import Place
 from models.user import User
 from models.state import State
-from models.amenity import Amenity
 
 
 @app_views.route('/cities/<city_id>/places', strict_slashes=False)
@@ -104,7 +103,7 @@ def put_place(place_id):
         strict_slashes=False
     )
 def post_place_2():
-    """Creates a City"""
+    """search and filter"""
     if not request.is_json:
         return jsonify({"error": "Not a JSON"}), 400
 
