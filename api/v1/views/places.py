@@ -137,13 +137,13 @@ def post_place_2():
     result = []
     amenities = data.get('amenities')
 
-    # if amenities:
-    #     for place in places:
-    #         amenity_ids = {amenity.id for amenity in place.amenities}
-    #         if all(amenity in amenity_ids for amenity in amenities):
-    #             result.append(place)
-    # else:
-    #     result = places
+    if amenities:
+        for place in places:
+            amenity_ids = {amenity.id for amenity in place.amenities}
+            if all(amenity in amenity_ids for amenity in amenities):
+                result.append(place)
+    else:
+        result = places
 
     # result = [place.to_dict() for place in result]
     # for place in result:
