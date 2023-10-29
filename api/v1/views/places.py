@@ -110,7 +110,7 @@ def post_place_2():
 
     data = request.get_json()
 
-    if not data or not (data.get('state') or data.get('cities')):
+    if not data or not (data.get('states') or data.get('cities')):
         places = storage.all(Place).values()
 
     else:
