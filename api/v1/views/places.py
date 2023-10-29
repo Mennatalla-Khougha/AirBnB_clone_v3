@@ -146,8 +146,8 @@ def post_place_2():
         result = places
 
     result = [place.to_dict() for place in result]
-    # for place in result:
-    #     if 'amenities' in place:
-    #         place.pop('amenities')
+    for place in result:
+        if 'amenities' in place:
+            place.pop('amenities')
 
     return jsonify([place.to_dict() for place in places])
