@@ -113,4 +113,25 @@ def post_place_2():
     if not data or not (data.get('state') or data.get('cities')):
         places = storage.all(Place).values()
 
+    else:
+        places = {}
+        states_ids = data.get('states')
+        if states_ids:
+            for state_id in states_ids:
+                state = storage.get(State, state_id)
+                for city in state.cities:
+                    places[city.name] = city.places
+
+        cities_id = data.get('cities')
+        if cities_id:
+            for city_id in cities_id:
+                city = storage.get(City, city_id)
+                places[city.name] = city.places
+
+        tmp = []
+        for city in places.values():
+            for place in city:
+                tmp.append(place)
+        places = tmp
+
     return jsonify([place.to_dict() for place in places])
