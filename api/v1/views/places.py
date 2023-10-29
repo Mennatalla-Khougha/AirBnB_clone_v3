@@ -96,3 +96,21 @@ def put_place(place_id):
             setattr(data, key, value)
     data.save()
     return jsonify(data.to_dict()), 200
+
+
+@app_views.route(
+        '/places_search',
+        methods=['POST'],
+        strict_slashes=False
+    )
+def post_place_2():
+    """Creates a City"""
+    if not request.is_json:
+        return jsonify({"error": "Not a JSON"}), 400
+
+    data = request.get_json()
+
+    if not data or not (data.get('state') or data.get('cities')):
+        places = storage.all(Place).values()
+
+    return jsonify([place.to_dict() for place in places])
