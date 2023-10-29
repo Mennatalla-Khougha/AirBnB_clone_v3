@@ -145,7 +145,7 @@ def post_place_2():
     else:
         result = places
 
-    # result = [place.to_dict() for place in result]
+    result = [place.to_dict() for place in result]
     # for place in result:
     #     if 'amenities' in place:
     #         place.pop('amenities')
