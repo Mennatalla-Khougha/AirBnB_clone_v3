@@ -113,7 +113,6 @@ def post_place_2():
     if not data or not (
         data.get('states')
         or data.get('cities')
-        or data.get('amenities')
     ):
         places = storage.all(Place).values()
 
@@ -126,7 +125,6 @@ def post_place_2():
                 if state:
                     for city in state.cities:
                         places[city.name] = city.places
-                
 
         cities_id = data.get('cities')
         if cities_id:
@@ -140,15 +138,18 @@ def post_place_2():
                 tmp.append(place)
         places = tmp
 
+    result = []
     amenities = data.get('amenities')
+
     if amenities:
         for place in places:
-            amenity_ids = [amenity.id for amenity in place.amenities]
-            for amenity in amenities:
-                if amenity not in amenity_ids:
-                    places.remove(place)
-                    break
-    result = [place.to_dict() for place in places]
+            amenity_ids = {amenity.id for amenity in place.amenities}
+            if all(amenity in amenity_ids for amenity in amenities):
+                result.append(place)
+    else:
+        result = places
+
+    result = [place.to_dict() for place in result]
     for place in result:
         if 'amenities' in place:
             place.pop('amenities')
