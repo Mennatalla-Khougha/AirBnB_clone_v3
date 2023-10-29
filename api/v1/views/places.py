@@ -119,8 +119,9 @@ def post_place_2():
         if states_ids:
             for state_id in states_ids:
                 state = storage.get(State, state_id)
-                for city in state.cities:
-                    places[city.name] = city.places
+                if state:
+                    for city in state.cities:
+                        places[city.name] = city.places
 
         cities_id = data.get('cities')
         if cities_id:
