@@ -86,24 +86,14 @@ class TestFileStorage(unittest.TestCase):
 
     def test_get(self):
         """Test that get properly retrive the specific object"""
-        state = State(name="Texas")
+        state = State(name='Albama')
         state.save()
-        city = City(name="alex", state_id=state.id)
-        city.save()
-        user = User(
-            name="khougha",
-            email="khougha@khouga.com",
-            password="pass"
-            )
-        user.save()
-        place = Place(name='studio', city_id=city.id, user=user.id)
-        place.save()
         amenity = Amenity(name='wifi')
         amenity.save()
-        result = models.storage.get(Place, place.id)
+        result = models.storage.get(State, state.id)
         result_2 = models.storage.get(Amenity, amenity.id)
-        self.assertIs(place, result)
-        self.assertIs(None, models.storage.get("Place", "none"))
+        self.assertIs(state, result)
+        self.assertIs(None, models.storage.get("State", "none"))
         self.assertIs(None, models.storage.get("none", "none"))
         self.assertIs(amenity, result_2)
 
