@@ -150,4 +150,4 @@ def post_place_2():
         if 'amenities' in place:
             place.pop('amenities')
 
-    return jsonify([place.to_dict() for place in places])
+    return jsonify(result)
