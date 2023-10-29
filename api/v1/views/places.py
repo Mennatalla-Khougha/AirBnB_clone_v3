@@ -7,6 +7,7 @@ from models.city import City
 from models.place import Place
 from models.user import User
 from models.state import State
+from models.amenity import Amenity
 
 
 @app_views.route('/cities/<city_id>/places', strict_slashes=False)
@@ -95,63 +96,3 @@ def put_place(place_id):
             setattr(data, key, value)
     data.save()
     return jsonify(data.to_dict()), 200
-
-
-@app_views.route(
-        '/places_search',
-        methods=['POST'],
-        strict_slashes=False
-    )
-def post_place_2():
-    """search and filter"""
-    if not request.is_json:
-        return jsonify({"error": "Not a JSON"}), 400
-
-    data = request.get_json()
-
-    if not data or not (
-        data.get('states')
-        or data.get('cities')
-    ):
-        places = storage.all(Place).values()
-
-    else:
-        places = {}
-        states_ids = data.get('states')
-        if states_ids:
-            for state_id in states_ids:
-                state = storage.get(State, state_id)
-                if state:
-                    for city in state.cities:
-                        places[city.name] = city.places
-
-        cities_id = data.get('cities')
-        if cities_id:
-            for city_id in cities_id:
-                city = storage.get(City, city_id)
-                places[city.name] = city.places
-
-        tmp = []
-        for city in places.values():
-            for place in city:
-                tmp.append(place)
-        places = tmp
-
-    result = places
-    # result = []
-    # amenities = data.get('amenities')
-
-    # if amenities:
-    #     for place in places:
-    #         amenity_ids = {amenity.id for amenity in place.amenities}
-    #         if all(amenity in amenity_ids for amenity in amenities):
-    #             result.append(place)
-    # else:
-    #     result = places
-
-    # result = [place.to_dict() for place in result]
-    # for place in result:
-    #     if 'amenities' in place:
-    #         place.pop('amenities')
-
-    return jsonify([place.to_dict() for place in result])
